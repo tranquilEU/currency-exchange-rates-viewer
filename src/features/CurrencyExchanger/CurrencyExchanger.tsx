@@ -1,49 +1,77 @@
 import type { GridColDef } from "@mui/x-data-grid";
 import { DataTable } from "../../shared/components/DataTable";
+import { useState } from "react";
+import type { Dayjs } from "dayjs";
+import type { TCurrency } from "../../shared/@types/types";
+import { useGetCurrencyRates } from "../../shared/hooks/useGetCurrencyRates";
+import {
+  DEFAULT_DATE,
+  DEFAULT_BASE_CURRENCY,
+  DEFAULT_DATE_FORMAT,
+  DEFAULT_DATE_STRING,
+  MIN_DAYS_FROM_START,
+} from "../../shared/constants";
+import { DatePickerComponent } from "../../shared/components/DatePicker";
+import { SelectComponent } from "../../shared/components/Select";
+import { useGetCurrencies } from "../../shared/hooks/useGetCurrencies";
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
+const columns: GridColDef<TCurrency[]>[] = [
   { field: "id", headerName: "ID", width: 90 },
   {
-    field: "firstName",
-    headerName: "First name",
+    field: "code",
+    headerName: "Currency Code",
     width: 150,
-    editable: true,
   },
   {
-    field: "lastName",
-    headerName: "Last name",
+    field: "name",
+    headerName: "Currency Name",
     width: 150,
-    editable: true,
   },
   {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 110,
-    editable: true,
+    field: "rate",
+    headerName: "Rate",
+    width: 150,
   },
-  {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
 export const CurrencyExchanger = () => {
-  return <DataTable rows={rows} columns={columns} />;
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(DEFAULT_DATE);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>();
+
+  const { data: currencies } = useGetCurrencies();
+
+  const { data: rows } = useGetCurrencyRates({
+    date: selectedDate?.format(DEFAULT_DATE_FORMAT) || DEFAULT_DATE_STRING,
+    baseCurrency: selectedCurrency || DEFAULT_BASE_CURRENCY,
+  });
+
+  const handleDateChange = (date: Dayjs | null) => {
+    setSelectedDate(date);
+  };
+
+  const mapDataToRows = (data: typeof rows) => {
+    if (!data || data.length === 0) return [];
+
+    return data.map(({ date, data }) => ({
+      id: date,
+      code: data.code,
+      name: data.name,
+    }));
+  };
+
+  return (
+    <>
+      <SelectComponent
+        value={selectedCurrency || DEFAULT_BASE_CURRENCY}
+        options={currencies || {}}
+        onChange={(e) => setSelectedCurrency(e.target.value)}
+      />
+      <DatePickerComponent
+        value={selectedDate ?? undefined}
+        minDate={DEFAULT_DATE.subtract(MIN_DAYS_FROM_START, "day")}
+        onChange={handleDateChange}
+      />
+      <DataTable rows={mapDataToRows(rows) ?? []} columns={columns} />
+    </>
+  );
 };
