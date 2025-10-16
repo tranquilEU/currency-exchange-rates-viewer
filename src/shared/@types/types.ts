@@ -1,13 +1,13 @@
-export type GBPValues = {
+export type CurrencyValues = {
   [currency: string]: number;
 };
 
-export type InputItem = {
+export type CurrencyRateResponse = {
   date: string;
-  data: GBPValues;
+  data: CurrencyValues;
 };
 
-export type OutputItem = {
+export type CurrencyRateRow = {
   id: string;
   currency: string;
   [date: string]: string | number;
