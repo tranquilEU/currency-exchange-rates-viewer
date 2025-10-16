@@ -1,7 +1,7 @@
 import { DatePicker } from '@mui/x-date-pickers';
 import type { Dayjs } from 'dayjs';
 
-import { DEFAULT_DATE_FORMAT } from '../constants';
+import { DEFAULT_DATE_FORMAT } from '@/shared/constants';
 
 type Props = {
 	value?: Dayjs;

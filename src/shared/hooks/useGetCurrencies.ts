@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { API_URL, QUERY_KEYS } from '../constants';
+import { API_URL, QUERY_KEYS } from '@/shared/constants';
 
 export const useGetCurrencies = () => {
 	return useQuery({

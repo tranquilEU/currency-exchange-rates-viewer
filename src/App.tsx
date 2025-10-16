@@ -1,4 +1,4 @@
-import { CurrencyExchanger } from './features/CurrencyExchanger/CurrencyExchanger';
+import { CurrencyExchanger } from '@/features/CurrencyExchanger/CurrencyExchanger';
 
 function App() {
 	return (

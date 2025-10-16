@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { API_URL, PAST_DAYS, QUERY_KEYS } from '../constants';
+import { API_URL, PAST_DAYS, QUERY_KEYS } from '@/shared/constants';
 
 type Props = {
 	date: string; // format: YYYY-MM-DD

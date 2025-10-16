@@ -1,48 +1,52 @@
-import {
-	GridActionsCellItem,
-	type GridColDef,
-	GridDeleteIcon
-} from '@mui/x-data-grid';
 import type { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import type {
-	CurrencyChangeEvent,
-	CurrencyRateResponse,
-	CurrencyRateRow
-} from '../../shared/@types/types';
-import { DataGridComponent } from '../../shared/components/DataGrid';
-import { DatePickerComponent } from '../../shared/components/DatePicker';
-import { SelectComponent } from '../../shared/components/Select';
+import { getCurrencyColumns } from '@/features/CurrencyExchanger/columns';
+import { mapDataToRows } from '@/features/CurrencyExchanger/currencymapper';
+
+import { DataGridComponent } from '@/shared/components/DataGrid';
+import { DatePickerComponent } from '@/shared/components/DatePicker';
+import { SelectComponent } from '@/shared/components/Select';
+
+import {
+	addRow,
+	removeRow,
+	selectDisplayedCurrencyRates,
+	selectSelectedCurrency,
+	selectSelectedDate,
+	setSelectedCurrency,
+	setSelectedDate
+} from '@/shared/store/currencySlice';
+
+import { useGetCurrencies } from '@/shared/hooks/useGetCurrencies';
+import { useGetCurrencyRates } from '@/shared/hooks/useGetCurrencyRates';
+
 import {
 	DEFAULT_CURRENCY,
 	DEFAULT_DATE,
 	DEFAULT_DATE_FORMAT,
 	DEFAULT_DATE_STRING,
 	MAX_ROWS,
-	MIN_DAYS_FROM_START,
-	MIN_ROWS
-} from '../../shared/constants';
-import { useGetCurrencies } from '../../shared/hooks/useGetCurrencies';
-import { useGetCurrencyRates } from '../../shared/hooks/useGetCurrencyRates';
-import type { AppDispatch, RootState } from '../../shared/store/store';
-import { extractValue } from '../../shared/utils/extractValue';
-import { filterCurrencyCodes } from '../../shared/utils/filterCurrencyCodes';
-import { filterCurrencyRates } from '../../shared/utils/filterCurrencyRates';
-import { formatCurrency } from '../../shared/utils/formatCurrency';
+	MIN_DAYS_FROM_START
+} from '@/shared/constants';
+
+import type {
+	CurrencyChangeEvent,
+	CurrencyRateRow
+} from '@/shared/@types/types';
+
+import { extractValue } from '@/shared/utils/extractValue';
+import { filterCurrencyCodes } from '@/shared/utils/filterCurrencyCodes';
+import { filterCurrencyRates } from '@/shared/utils/filterCurrencyRates';
+import { formatCurrency } from '@/shared/utils/formatCurrency';
 
 export const CurrencyExchanger = () => {
-	const displayedCurrencyRates = useSelector(
-		(state: RootState) => state.currency.displayedCurrencyRates
-	);
-	const selectedCurrency = useSelector(
-		(state: RootState) => state.currency.selectedCurrency
-	);
-	const selectedDate = useSelector(
-		(state: RootState) => state.currency.selectedDate
-	);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useDispatch();
+
+	const displayedCurrencyRates = useSelector(selectDisplayedCurrencyRates);
+	const selectedCurrency = useSelector(selectSelectedCurrency);
+	const selectedDate = useSelector(selectSelectedDate);
 
 	const { data: currencies } = useGetCurrencies();
 	const { data: currencyRates } = useGetCurrencyRates({
@@ -63,98 +67,46 @@ export const CurrencyExchanger = () => {
 	const handleCurrencyChange = (e: CurrencyChangeEvent) => {
 		const value = extractValue(e);
 		if (value) {
-			dispatch({ type: 'currency/setSelectedCurrency', payload: value });
+			dispatch(setSelectedCurrency(value));
 		}
 	};
 
 	const handleDateChange = (date: Dayjs | null) => {
 		if (date) {
-			dispatch({
-				type: 'currency/setSelectedDate',
-				payload: date
-			});
+			dispatch(setSelectedDate(date.format(DEFAULT_DATE_FORMAT)));
 		}
 	};
 
 	const handleRemoveRow = (currency: string) => {
-		dispatch({
-			type: 'currency/removeRow',
-			payload: currency
-		});
+		dispatch(removeRow(currency));
 	};
 
 	const handleAddRow = (e: CurrencyChangeEvent) => {
 		const value = extractValue(e);
 		if (value) {
-			const id = (displayedCurrencyRates.length + 1).toString();
 			const currencyRow: CurrencyRateRow = {
-				id,
+				id: (displayedCurrencyRates.length + 1).toString(),
 				currency: formatCurrency(value, currencies || {})
 			};
-			dispatch({
-				type: 'currency/addRow',
-				payload: currencyRow.currency.split(' - ')[0].toLowerCase()
-			});
+			dispatch(addRow(currencyRow.currency.split(' - ')[0].toLowerCase()));
 			setAddCurrency(currencyRow.currency);
 		}
 	};
 
-	const mapDataToRows = (arr: CurrencyRateResponse[]): CurrencyRateRow[] => {
-		const result: Record<string, CurrencyRateRow> = {};
-		arr.forEach(({ date, data }) => {
-			Object.entries(data).forEach(([currency, value], index) => {
-				if (!result[currency]) {
-					result[currency] = {
-						id: (index + 1).toString(),
-						currency: formatCurrency(currency, currencies || {})
-					};
-				}
-				result[currency][date] = value;
-			});
-		});
+	const rows = mapDataToRows(filteredCurrencyRates || [], currencies);
 
-		return Object.values(result);
-	};
-
-	const rows = mapDataToRows(filteredCurrencyRates || []);
-
-	const columns: GridColDef<CurrencyRateRow>[] = [
-		{ field: 'id', headerName: 'ID', width: 40 },
-		{ field: 'currency', headerName: 'Currency', width: 200 },
-		...(filteredCurrencyRates ?? []).reverse().map(day => ({
-			field: day.date,
-			headerName: day.date,
-			width: 130
-		})),
-		{
-			field: 'delete',
-			headerName: '',
-			width: 50,
-			renderCell: params => {
-				if (displayedCurrencyRates.length > MIN_ROWS) {
-					return (
-						<GridActionsCellItem
-							icon={<GridDeleteIcon />}
-							label="Delete"
-							onClick={() =>
-								handleRemoveRow(
-									params.row.currency.split(' - ')[0].toLowerCase()
-								)
-							}
-							color="inherit"
-						/>
-					);
-				}
-			}
-		}
-	];
+	const columns = getCurrencyColumns(
+		filteredCurrencyRates,
+		displayedCurrencyRates,
+		handleRemoveRow
+	);
 
 	return (
 		<>
 			<SelectComponent
 				value={selectedCurrency || DEFAULT_CURRENCY}
 				options={currencies || {}}
-				onChange={e => handleCurrencyChange(e)}
+				onChange={handleCurrencyChange}
 			/>
 			<DatePickerComponent
 				value={selectedDate ?? undefined}
@@ -169,7 +121,7 @@ export const CurrencyExchanger = () => {
 						selectedCurrency,
 						currencies
 					)}
-					onChange={e => handleAddRow(e)}
+					onChange={handleAddRow}
 				/>
 			)}
 			<DataGridComponent rows={rows} columns={columns} />
