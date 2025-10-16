@@ -7,6 +7,7 @@ export const QUERY_KEYS = {
 	CURRENCY_RATES: 'currency-rates'
 };
 export const DEFAULT_CURRENCY = 'gbp';
+export const DEFAULT_CURRENCY_OPTION = { gbp: 'British Pound' };
 export const DEFAULT_CURRENCIES = [
 	'usd',
 	'eur',

@@ -5,12 +5,17 @@ import type { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 type TDataGridProps = {
 	rows: GridRowsProp;
 	columns: GridColDef[];
+	isLoading?: boolean;
 };
 
-export const DataGridComponent = ({ rows, columns }: TDataGridProps) => {
+export const DataGridComponent = ({
+	rows,
+	columns,
+	isLoading
+}: TDataGridProps) => {
 	return (
 		<Box sx={{ height: 500, width: '100%' }}>
-			<DataGrid rows={rows} columns={columns} />
+			<DataGrid rows={rows} loading={isLoading} columns={columns} />
 		</Box>
 	);
 };

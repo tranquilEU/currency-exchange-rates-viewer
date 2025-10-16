@@ -5,6 +5,10 @@ import { API_URL, PAST_DAYS, QUERY_KEYS } from '@/shared/constants';
 type Props = {
 	date: string; // format: YYYY-MM-DD
 	baseCurrency: string;
+	triggerToast?: (
+		message: string,
+		severity: 'info' | 'success' | 'warning' | 'error'
+	) => void;
 };
 
 function getPreviousDates(date: string, days: number): string[] {
@@ -20,7 +24,11 @@ function getPreviousDates(date: string, days: number): string[] {
 	return result;
 }
 
-export const useGetCurrencyRates = ({ date, baseCurrency }: Props) => {
+export const useGetCurrencyRates = ({
+	date,
+	baseCurrency,
+	triggerToast
+}: Props) => {
 	return useQuery({
 		queryKey: [QUERY_KEYS.CURRENCY_RATES, date, baseCurrency],
 		queryFn: async () => {
@@ -31,7 +39,10 @@ export const useGetCurrencyRates = ({ date, baseCurrency }: Props) => {
 					const res = await fetch(
 						`${API_URL}@${d}/v1/currencies/${baseCurrency}.json`
 					);
-					if (!res.ok) throw new Error(`Network response was not ok for ${d}`);
+					if (!res.ok) {
+						triggerToast?.(`Failed to fetch currency rates for ${d}.`, 'error');
+						throw new Error(`Network response was not ok for ${d}`);
+					}
 					const data = await res.json();
 					return { date: d, data };
 				})

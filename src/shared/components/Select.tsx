@@ -7,6 +7,8 @@ type SelectProps = {
 	value: string;
 	options: Record<string, string>;
 	labelId?: string;
+	label?: string;
+	placeholder?: string;
 	onChange: (event: SelectChangeEvent) => void;
 };
 
@@ -14,17 +16,29 @@ export const SelectComponent = ({
 	value,
 	options,
 	labelId,
+	label = '',
+	placeholder = '',
 	onChange
 }: SelectProps) => {
 	return (
 		<FormControl variant="outlined">
-			<InputLabel id={labelId}>{value}</InputLabel>
-			<Select labelId={labelId} label={value} value={value} onChange={onChange}>
+			<InputLabel id={labelId}>{label}</InputLabel>
+			<Select
+				labelId={labelId}
+				label={label}
+				value={options[value] ? value : ''}
+				onChange={onChange}
+				displayEmpty
+			>
+				<MenuItem value="" disabled>
+					<em>{placeholder}</em>
+				</MenuItem>
+
 				{Object.entries(options)
-					.filter(([, label]) => label && label.trim() !== '')
-					.map(([key, label]) => (
+					.filter(([, optionLabel]) => optionLabel && optionLabel.trim() !== '')
+					.map(([key, optionLabel]) => (
 						<MenuItem key={key} value={key}>
-							{`${key.toUpperCase()} - ${label}`}
+							{`${key.toUpperCase()} - ${optionLabel}`}
 						</MenuItem>
 					))}
 			</Select>
