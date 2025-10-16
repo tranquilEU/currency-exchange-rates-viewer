@@ -1,8 +1,7 @@
-import type { GridColDef } from "@mui/x-data-grid";
 import { DataTable } from "../../shared/components/DataTable";
 import { useState } from "react";
 import type { Dayjs } from "dayjs";
-import type { TCurrency } from "../../shared/@types/types";
+import type { InputItem, OutputItem } from "../../shared/@types/types";
 import { useGetCurrencyRates } from "../../shared/hooks/useGetCurrencyRates";
 import {
   DEFAULT_DATE,
@@ -14,33 +13,17 @@ import {
 import { DatePickerComponent } from "../../shared/components/DatePicker";
 import { SelectComponent } from "../../shared/components/Select";
 import { useGetCurrencies } from "../../shared/hooks/useGetCurrencies";
-
-const columns: GridColDef<TCurrency[]>[] = [
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "code",
-    headerName: "Currency Code",
-    width: 150,
-  },
-  {
-    field: "name",
-    headerName: "Currency Name",
-    width: 150,
-  },
-  {
-    field: "rate",
-    headerName: "Rate",
-    width: 150,
-  },
-];
+import type { GridColDef } from "@mui/x-data-grid";
+import { formatCurrency } from "../../shared/utils/formatCurrency";
 
 export const CurrencyExchanger = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(DEFAULT_DATE);
-  const [selectedCurrency, setSelectedCurrency] = useState<string>();
+  const [selectedCurrency, setSelectedCurrency] = useState<string>(
+    DEFAULT_BASE_CURRENCY
+  );
 
   const { data: currencies } = useGetCurrencies();
-
-  const { data: rows } = useGetCurrencyRates({
+  const { data: currencyRates } = useGetCurrencyRates({
     date: selectedDate?.format(DEFAULT_DATE_FORMAT) || DEFAULT_DATE_STRING,
     baseCurrency: selectedCurrency || DEFAULT_BASE_CURRENCY,
   });
@@ -49,15 +32,33 @@ export const CurrencyExchanger = () => {
     setSelectedDate(date);
   };
 
-  const mapDataToRows = (data: typeof rows) => {
-    if (!data || data.length === 0) return [];
+  const mapDataToRows = (arr: InputItem[]): OutputItem[] => {
+    const result: Record<string, OutputItem> = {};
+    arr.forEach(({ date, data }) => {
+      Object.entries(data[selectedCurrency]).forEach(([currency, value]) => {
+        if (!result[currency]) {
+          result[currency] = {
+            id: currency,
+            currency: formatCurrency(currency, currencies || {}),
+          };
+        }
+        result[currency][date] = value;
+      });
+    });
 
-    return data.map(({ date, data }) => ({
-      id: date,
-      code: data.code,
-      name: data.name,
-    }));
+    return Object.values(result);
   };
+
+  const rows = mapDataToRows(currencyRates || []);
+
+  const columns: GridColDef<OutputItem[]>[] = [
+    { field: "currency", headerName: "Currency", width: 200 },
+    ...(currencyRates ?? []).map((day) => ({
+      field: day.date,
+      headerName: day.date,
+      width: 130,
+    })),
+  ];
 
   return (
     <>
@@ -71,7 +72,7 @@ export const CurrencyExchanger = () => {
         minDate={DEFAULT_DATE.subtract(MIN_DAYS_FROM_START, "day")}
         onChange={handleDateChange}
       />
-      <DataTable rows={mapDataToRows(rows) ?? []} columns={columns} />
+      <DataTable rows={rows} columns={columns} />
     </>
   );
 };
