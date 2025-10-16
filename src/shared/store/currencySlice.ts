@@ -1,21 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { CurrencyRateRow } from "../@types/types";
-import { DEFAULT_CURRENCY, DEFAULT_DATE } from "../constants";
+import {
+  DEFAULT_CURRENCIES,
+  DEFAULT_CURRENCY,
+  DEFAULT_DATE,
+} from "../constants";
 import type { Dayjs } from "dayjs";
 
 interface CurrencyState {
-  defaultCurrencies: string[];
+  displayedCurrencyRates: string[];
   selectedCurrency: string;
   selectedDate: Dayjs;
-  rows: CurrencyRateRow[];
 }
 
 const initialState: CurrencyState = {
-  defaultCurrencies: ["usd", "eur", "jpy", "chf", "cad", "aud", "zar"],
+  displayedCurrencyRates: DEFAULT_CURRENCIES,
   selectedCurrency: DEFAULT_CURRENCY,
   selectedDate: DEFAULT_DATE,
-  rows: [],
 };
 
 const currencySlice = createSlice({
@@ -28,16 +29,15 @@ const currencySlice = createSlice({
     setSelectedDate: (state, action: PayloadAction<Dayjs>) => {
       state.selectedDate = action.payload;
     },
-    addRow: (state) => {
-      state.rows.push({
-        id: String(state.rows.length),
-        currency: "usd",
-        amount: 0,
-      });
+    addRow: (state, action: PayloadAction<string>) => {
+      state.displayedCurrencyRates = [
+        ...state.displayedCurrencyRates,
+        action.payload,
+      ];
     },
-    removeRow: (state, action: PayloadAction<number>) => {
-      state.rows = state.rows.filter(
-        (row) => row.id !== String(action.payload)
+    removeRow: (state, action: PayloadAction<string>) => {
+      state.displayedCurrencyRates = state.displayedCurrencyRates.filter(
+        (currency) => currency !== action.payload
       );
     },
   },
