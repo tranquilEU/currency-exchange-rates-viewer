@@ -1,10 +1,13 @@
 export const filterCurrencyCodes = (
   displayedCurrencyRates: string[],
+  selectedCurrency: string,
   currencies: Record<string, string> | undefined
 ) => {
+  const excluded = new Set([...displayedCurrencyRates, selectedCurrency]);
+
   return Object.fromEntries(
     Object.entries(currencies || {}).filter(
-      ([key]) => !displayedCurrencyRates.includes(key)
+      ([key]) => !excluded.has(key.toLowerCase())
     )
-  ) as Record<string, string>;
+  );
 };
