@@ -19,5 +19,20 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      "no-mixed-spaces-and-tabs": 0,
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["node_modules/@mui/material"],
+              message:
+                "\n Import MUI components from the @mui/material/[componentName] instead",
+            },
+          ],
+        },
+      ],
+    }
   },
 ])
