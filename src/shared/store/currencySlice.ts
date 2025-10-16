@@ -1,4 +1,8 @@
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import {
+	type PayloadAction,
+	createSelector,
+	createSlice
+} from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 
 import {
@@ -53,7 +57,9 @@ export const selectDisplayedCurrencyRates = (state: RootState) =>
 export const selectSelectedCurrency = (state: RootState) =>
 	state.currency.selectedCurrency;
 
-export const selectSelectedDate = (state: RootState) =>
-	dayjs(state.currency.selectedDate);
+export const selectSelectedDate = createSelector(
+	(state: RootState) => state.currency.selectedDate,
+	selectedDate => dayjs(selectedDate)
+);
 
 export default currencySlice.reducer;
