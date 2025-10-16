@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import type {
+	CurrencyChangeEvent,
 	CurrencyRateResponse,
 	CurrencyRateRow
 } from '../../shared/@types/types';
@@ -26,6 +27,7 @@ import {
 import { useGetCurrencies } from '../../shared/hooks/useGetCurrencies';
 import { useGetCurrencyRates } from '../../shared/hooks/useGetCurrencyRates';
 import type { AppDispatch, RootState } from '../../shared/store/store';
+import { extractValue } from '../../shared/utils/extractValue';
 import { filterCurrencyCodes } from '../../shared/utils/filterCurrencyCodes';
 import { filterCurrencyRates } from '../../shared/utils/filterCurrencyRates';
 import { formatCurrency } from '../../shared/utils/formatCurrency';
@@ -58,32 +60,9 @@ export const CurrencyExchanger = () => {
 		currencyRates
 	);
 
-	const handleCurrencyChange = (
-		e:
-			| React.ChangeEvent<
-					Omit<HTMLInputElement, 'value'> & {
-						value: string;
-					}
-			  >
-			| (Event & {
-					target: {
-						value: string;
-						name: string;
-					};
-			  })
-	) => {
-		let value: string | undefined;
-		if (typeof e === 'string') {
-			value = e;
-		} else if (e && 'target' in e) {
-			const target = (
-				e as
-					| React.ChangeEvent<HTMLSelectElement>
-					| React.ChangeEvent<HTMLInputElement>
-			).target as HTMLInputElement | HTMLSelectElement;
-			value = target?.value;
-		}
-		if (typeof value === 'string') {
+	const handleCurrencyChange = (e: CurrencyChangeEvent) => {
+		const value = extractValue(e);
+		if (value) {
 			dispatch({ type: 'currency/setSelectedCurrency', payload: value });
 		}
 	};
@@ -104,33 +83,9 @@ export const CurrencyExchanger = () => {
 		});
 	};
 
-	const handleAddRow = (
-		e:
-			| React.ChangeEvent<
-					Omit<HTMLInputElement, 'value'> & {
-						value: string;
-					}
-			  >
-			| (Event & {
-					target: {
-						value: string;
-						name: string;
-					};
-			  })
-	) => {
-		let value: string | undefined;
-		if (typeof e === 'string') {
-			value = e;
-		} else if (e && 'target' in e) {
-			const target = (
-				e as
-					| React.ChangeEvent<HTMLSelectElement>
-					| React.ChangeEvent<HTMLInputElement>
-			).target as HTMLInputElement | HTMLSelectElement;
-			value = target?.value;
-		}
-
-		if (typeof value === 'string') {
+	const handleAddRow = (e: CurrencyChangeEvent) => {
+		const value = extractValue(e);
+		if (value) {
 			const id = (displayedCurrencyRates.length + 1).toString();
 			const currencyRow: CurrencyRateRow = {
 				id,
