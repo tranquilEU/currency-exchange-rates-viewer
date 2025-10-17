@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -28,6 +29,25 @@ export const DatePickerComponent = memo(
 				maxDate={maxDate}
 				onChange={onChange}
 				format={format}
+				enableAccessibleFieldDOMStructure={false}
+				slots={{
+					textField: params => (
+						<TextField
+							{...params}
+							sx={{
+								width: {
+									xs: '100%',
+									sm: '100%',
+									md: 200
+								}
+							}}
+							inputProps={{
+								...params.inputProps,
+								readOnly: true
+							}}
+						/>
+					)
+				}}
 			/>
 		);
 	}

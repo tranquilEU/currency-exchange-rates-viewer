@@ -39,52 +39,59 @@ export const CurrencyExchanger = () => {
 	} = useCurrencyExchanger();
 
 	return (
-		<>
-			<Toast
-				open={open}
-				message={toastMessage}
-				severity={toastSeverity}
-				onClose={() => setOpen(false)}
-			/>
-
-			<SelectComponent
-				value={selectedCurrency || DEFAULT_CURRENCY}
-				options={currencies || DEFAULT_CURRENCY_OPTION}
-				onChange={handleCurrencyChange}
-			/>
-
-			<DatePickerComponent
-				value={selectedDate ?? undefined}
-				minDate={DEFAULT_DATE.subtract(MIN_DAYS_FROM_START, 'day')}
-				onChange={handleDateChange}
-			/>
-
-			{showAddCurrency && (
+		<div className="currency-exchanger-container">
+			<div className="header-container">
+				<h1 className="header-text">Currency Exchange Rates Viewer</h1>
+				<img src="/currency.svg" alt="currency" className="currency-icon" />
+			</div>
+			<div className="controls-container">
 				<SelectComponent
-					value={addCurrency}
-					placeholder="Select a Currency"
-					options={filterCurrencyCodes(
-						rows.map(r => r.currency),
-						selectedCurrency,
-						currencies
-					)}
-					onChange={handleAddRow}
+					value={selectedCurrency || DEFAULT_CURRENCY}
+					options={currencies || DEFAULT_CURRENCY_OPTION}
+					onChange={handleCurrencyChange}
 				/>
-			)}
 
+				<DatePickerComponent
+					value={selectedDate ?? undefined}
+					minDate={DEFAULT_DATE.subtract(MIN_DAYS_FROM_START, 'day')}
+					onChange={handleDateChange}
+				/>
+
+				{showAddCurrency && (
+					<SelectComponent
+						value={addCurrency}
+						placeholder="Add New Currency"
+						options={filterCurrencyCodes(
+							rows.map(r => r.currency),
+							selectedCurrency,
+							currencies
+						)}
+						onChange={handleAddRow}
+					/>
+				)}
+			</div>
 			<DataGridComponent rows={rows} columns={columns} isLoading={isLoading} />
 			<DialogComponent
 				title="Confirm Deletion"
 				confirmText={
 					<>
 						Are you sure you want to remove{' '}
-						<strong>{currencyToDelete?.toUpperCase()}</strong>?
+						<span className="text--bold">
+							{currencyToDelete?.toUpperCase()}
+						</span>
+						?
 					</>
 				}
 				confirmOpen={confirmOpen}
 				handleCancelDelete={handleCancelDelete}
 				handleConfirmDelete={handleConfirmDelete}
 			/>
-		</>
+			<Toast
+				open={open}
+				message={toastMessage}
+				severity={toastSeverity}
+				onClose={() => setOpen(false)}
+			/>
+		</div>
 	);
 };

@@ -1,11 +1,102 @@
-$primary-color: #e4e4e4;
+@use "sass:map";
 
-body {
-  background-color: $primary-color;
-  color: white;
+$colors: (
+  primary: #525252,
+  white: #ffffff,
+  danger: #ff4d4f
+);
+
+$font-sizes: (
+  small: 0.875rem,
+  base: 1rem,
+  large: 1.5rem
+);
+
+$spacing-unit: 1rem;
+
+$breakpoints: (
+  sm: 480px,
+  md: 768px,
+  lg: 1024px
+);
+
+@function color($name) {
+  @return map.get($colors, $name);
 }
 
-// Bold text style
-.bold-text {
-  font-weight: bold;
+@function font-size($name) {
+  @return map.get($font-sizes, $name);
+}
+
+@mixin respond-to($breakpoint) {
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+.text {
+  &--bold { font-weight: bold !important; }
+  &--center { text-align: center; }
+  &--danger { color: color(danger); }
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: color(white);
+  color: color(primary);
+  margin: 0;
+}
+
+.currency-exchanger-container {
+  background-color: color(white);
+  padding: $spacing-unit 0;
+
+  .header-text {
+    font-size: font-size(large);
+    font-weight: bold;
+    margin-bottom: $spacing-unit;
+    padding: $spacing-unit 0;
+    text-align: center;
+    color: color(primary);
+  }
+}
+
+.controls-container {
+  margin: $spacing-unit;
+  gap: 2 * $spacing-unit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include respond-to(md) {
+    flex-direction: row;
+  }
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-unit;
+  justify-content: center;
+  gap: $spacing-unit;
+}
+
+.currency-icon {
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+}
+
+.table {
+  margin: $spacing-unit;
+}
+
+.id-column-cell {
+  padding-left: 0.5rem;
+}
+
+.delete {
+  &:hover {
+    color: color(danger);
+  }
 }

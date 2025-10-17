@@ -32,10 +32,19 @@ export const DialogComponent = memo(
 					<DialogContentText>{confirmText}</DialogContentText>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleCancelDelete} color="primary">
+					<Button
+						onClick={handleCancelDelete}
+						color="primary"
+						className="text--bold"
+					>
 						Cancel
 					</Button>
-					<Button onClick={handleConfirmDelete} color="error" autoFocus>
+					<Button
+						onClick={handleConfirmDelete}
+						color="error"
+						autoFocus
+						className="text--bold"
+					>
 						Delete
 					</Button>
 				</DialogActions>

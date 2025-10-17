@@ -16,7 +16,14 @@ export const getCurrencyColumns = (
 	displayedCurrencyRates: string[],
 	handleRemoveRow: (currency: string) => void
 ): GridColDef<CurrencyRateRow>[] => [
-	{ field: 'id', headerName: 'ID', width: 40 },
+	{
+		field: 'id',
+		headerName: 'ID',
+		width: 40,
+		renderHeader: () => <div className="id-column-cell">ID</div>,
+
+		renderCell: params => <div className="id-column-cell">{params.value}</div>
+	},
 	{ field: 'currency', headerName: 'Currency', flex: 2 },
 	...(filteredCurrencyRates ?? []).reverse().map(day => ({
 		field: day.date,
@@ -32,10 +39,10 @@ export const getCurrencyColumns = (
 				<GridActionsCellItem
 					icon={<GridDeleteIcon />}
 					label="Delete"
+					className="delete"
 					onClick={() =>
 						handleRemoveRow(params.row.currency.split(' - ')[0].toLowerCase())
 					}
-					color="inherit"
 				/>
 			) : null
 	}

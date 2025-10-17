@@ -13,7 +13,12 @@ export const DataGridComponent = memo(
 	({ rows, columns, isLoading }: TDataGridProps) => {
 		return (
 			<Box sx={{ height: 475, width: '100%' }}>
-				<DataGrid rows={rows} loading={isLoading} columns={columns} />
+				<DataGrid
+					className="table"
+					rows={rows}
+					loading={isLoading}
+					columns={columns}
+				/>
 			</Box>
 		);
 	}
