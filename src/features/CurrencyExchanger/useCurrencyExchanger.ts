@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getCurrencyColumns } from '@/features/CurrencyExchanger/columns';
-import { mapDataToRows } from '@/features/CurrencyExchanger/currencyMapper';
+import { mapDataToRows } from '@/features/CurrencyExchanger/mapper';
 
 import {
 	addRow,
