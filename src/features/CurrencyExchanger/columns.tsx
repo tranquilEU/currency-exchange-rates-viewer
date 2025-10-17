@@ -9,7 +9,7 @@ import { MIN_ROWS } from '@/shared/constants';
 import type {
 	CurrencyRateResponse,
 	CurrencyRateRow
-} from '@/shared/@types/types';
+} from '@/shared/types/types';
 
 export const getCurrencyColumns = (
 	filteredCurrencyRates: CurrencyRateResponse[] | undefined,

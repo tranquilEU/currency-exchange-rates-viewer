@@ -13,9 +13,9 @@ import {
 	MIN_DAYS_FROM_START
 } from '@/shared/constants';
 
-import type { CurrencyRateRow } from '@/shared/@types/types';
-
 import { filterCurrencyCodes } from '@/shared/utils/filterCurrencyCodes';
+
+import type { CurrencyRateRow } from '@/shared/types/types';
 
 export const CurrencyExchanger = () => {
 	const {

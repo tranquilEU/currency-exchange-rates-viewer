@@ -27,14 +27,14 @@ import {
 	MAX_ROWS
 } from '@/shared/constants';
 
-import type {
-	CurrencyChangeEvent,
-	CurrencyRateRow
-} from '@/shared/@types/types';
-
 import { extractValue } from '@/shared/utils/extractValue';
 import { filterCurrencyRates } from '@/shared/utils/filterCurrencyRates';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
+
+import type {
+	CurrencyChangeEvent,
+	CurrencyRateRow
+} from '@/shared/types/types';
 
 export const useCurrencyExchanger = () => {
 	const dispatch = useDispatch();

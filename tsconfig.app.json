@@ -17,13 +17,14 @@
 			"@components/*": ["src/shared/components/*"],
 			"@hooks/*": ["src/shared/hooks/*"],
 			"@utils/*": ["src/shared/utils/*"],
-			"@store/*": ["src/shared/store/*"]
+			"@store/*": ["src/shared/store/*"],
+			"@tests/*": ["src/tests/*"]
 		},
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": true,
+		"verbatimModuleSyntax": false,
 		"moduleDetection": "force",
 		"noEmit": true,
 		"jsx": "react-jsx",
@@ -36,5 +37,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src"]
+	"include": ["src", "jest.setup.ts"]
 }

@@ -1,9 +1,9 @@
+import { formatCurrency } from '@/shared/utils/formatCurrency';
+
 import type {
 	CurrencyRateResponse,
 	CurrencyRateRow
-} from '@/shared/@types/types';
-
-import { formatCurrency } from '@/shared/utils/formatCurrency';
+} from '@/shared/types/types';
 
 export const mapDataToRows = (
 	arr: CurrencyRateResponse[],

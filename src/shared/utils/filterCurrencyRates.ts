@@ -1,4 +1,4 @@
-import type { CurrencyRateResponse } from '@/shared/@types/types';
+import { CurrencyRateResponse } from '@/shared/types/types';
 
 export const filterCurrencyRates = (
 	selectedCurrency: string,
