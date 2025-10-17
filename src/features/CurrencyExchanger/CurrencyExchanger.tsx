@@ -13,6 +13,8 @@ import {
 	MIN_DAYS_FROM_START
 } from '@/shared/constants';
 
+import type { CurrencyRateRow } from '@/shared/@types/types';
+
 import { filterCurrencyCodes } from '@/shared/utils/filterCurrencyCodes';
 
 export const CurrencyExchanger = () => {
@@ -62,7 +64,7 @@ export const CurrencyExchanger = () => {
 						value={addCurrency}
 						placeholder="Add New Currency"
 						options={filterCurrencyCodes(
-							rows.map(r => r.currency),
+							rows.map((r: CurrencyRateRow) => r.currency),
 							selectedCurrency,
 							currencies
 						)}
