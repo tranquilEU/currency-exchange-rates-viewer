@@ -17,11 +17,11 @@ export const getCurrencyColumns = (
 	handleRemoveRow: (currency: string) => void
 ): GridColDef<CurrencyRateRow>[] => [
 	{ field: 'id', headerName: 'ID', width: 40 },
-	{ field: 'currency', headerName: 'Currency', width: 200 },
+	{ field: 'currency', headerName: 'Currency', flex: 2 },
 	...(filteredCurrencyRates ?? []).reverse().map(day => ({
 		field: day.date,
 		headerName: day.date,
-		width: 130
+		flex: 1
 	})),
 	{
 		field: 'delete',

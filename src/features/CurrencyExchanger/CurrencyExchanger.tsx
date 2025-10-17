@@ -1,18 +1,10 @@
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle
-} from '@mui/material';
-
 import { useCurrencyExchanger } from '@/features/CurrencyExchanger/useCurrencyExchanger';
 
 import { DataGridComponent } from '@/shared/components/DataGrid';
 import { DatePickerComponent } from '@/shared/components/DatePicker';
+import { DialogComponent } from '@/shared/components/Dialog';
 import { SelectComponent } from '@/shared/components/Select';
-import Toast from '@/shared/components/Toast';
+import { Toast } from '@/shared/components/Toast';
 
 import {
 	DEFAULT_CURRENCY,
@@ -81,24 +73,18 @@ export const CurrencyExchanger = () => {
 			)}
 
 			<DataGridComponent rows={rows} columns={columns} isLoading={isLoading} />
-
-			<Dialog open={confirmOpen} onClose={handleCancelDelete}>
-				<DialogTitle>Confirm Deletion</DialogTitle>
-				<DialogContent>
-					<DialogContentText>
+			<DialogComponent
+				title="Confirm Deletion"
+				confirmText={
+					<>
 						Are you sure you want to remove{' '}
 						<strong>{currencyToDelete?.toUpperCase()}</strong>?
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleCancelDelete} color="primary">
-						Cancel
-					</Button>
-					<Button onClick={handleConfirmDelete} color="error" autoFocus>
-						Delete
-					</Button>
-				</DialogActions>
-			</Dialog>
+					</>
+				}
+				confirmOpen={confirmOpen}
+				handleCancelDelete={handleCancelDelete}
+				handleConfirmDelete={handleConfirmDelete}
+			/>
 		</>
 	);
 };

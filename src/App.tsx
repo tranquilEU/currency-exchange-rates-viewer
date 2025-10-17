@@ -1,11 +1,11 @@
 import { CurrencyExchanger } from '@/features/CurrencyExchanger/CurrencyExchanger';
 
-function App() {
+const App = () => {
 	return (
 		<>
 			<CurrencyExchanger />
 		</>
 	);
-}
+};
 
 export default App;

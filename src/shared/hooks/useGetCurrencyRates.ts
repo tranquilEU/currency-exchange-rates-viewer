@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { API_URL, PAST_DAYS, QUERY_KEYS } from '@/shared/constants';
 
+import { getPreviousDates } from '@/shared/utils/getPreviousDates';
+
 type Props = {
 	date: string; // format: YYYY-MM-DD
 	baseCurrency: string;
@@ -10,19 +12,6 @@ type Props = {
 		severity: 'info' | 'success' | 'warning' | 'error'
 	) => void;
 };
-
-function getPreviousDates(date: string, days: number): string[] {
-	const result: string[] = [];
-	const base = new Date(date);
-
-	for (let i = 0; i < days; i++) {
-		const d = new Date(base);
-		d.setDate(base.getDate() - i);
-		result.push(d.toISOString().split('T')[0]);
-	}
-
-	return result;
-}
 
 export const useGetCurrencyRates = ({
 	date,

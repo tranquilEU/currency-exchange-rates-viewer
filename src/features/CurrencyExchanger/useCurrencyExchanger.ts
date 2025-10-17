@@ -1,9 +1,9 @@
 import type { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getCurrencyColumns } from '@/features/CurrencyExchanger/columns';
-import { mapDataToRows } from '@/features/CurrencyExchanger/currencymapper';
+import { mapDataToRows } from '@/features/CurrencyExchanger/currencyMapper';
 
 import {
 	addRow,
@@ -58,61 +58,87 @@ export const useCurrencyExchanger = () => {
 
 	const showAddCurrency = displayedCurrencyRates.length < MAX_ROWS;
 
-	const filteredCurrencyRates = filterCurrencyRates(
-		selectedCurrency,
-		displayedCurrencyRates,
-		currencyRates
+	const filteredCurrencyRates = useMemo(
+		() =>
+			filterCurrencyRates(
+				selectedCurrency,
+				displayedCurrencyRates,
+				currencyRates
+			),
+		[selectedCurrency, displayedCurrencyRates, currencyRates]
 	);
 
-	const rows = mapDataToRows(filteredCurrencyRates || [], currencies);
-	const columns = getCurrencyColumns(
-		filteredCurrencyRates,
-		displayedCurrencyRates,
-		handleRemoveRow
-	);
-
-	function handleCurrencyChange(e: CurrencyChangeEvent) {
-		const value = extractValue(e);
-		if (value) dispatch(setSelectedCurrency(value));
-	}
-
-	function handleDateChange(date: Dayjs | null) {
-		if (date) dispatch(setSelectedDate(date.format(DEFAULT_DATE_FORMAT)));
-	}
-
-	function handleRemoveRow(currency: string) {
+	const handleRemoveRow = useCallback((currency: string) => {
 		setCurrencyToDelete(currency);
 		setConfirmOpen(true);
-	}
+	}, []);
 
-	function handleConfirmDelete() {
+	const rows = useMemo(
+		() => mapDataToRows(filteredCurrencyRates || [], currencies),
+		[filteredCurrencyRates, currencies]
+	);
+
+	const columns = useMemo(
+		() =>
+			getCurrencyColumns(
+				filteredCurrencyRates,
+				displayedCurrencyRates,
+				handleRemoveRow
+			),
+		[filteredCurrencyRates, displayedCurrencyRates, handleRemoveRow]
+	);
+
+	const handleCurrencyChange = useCallback(
+		(e: CurrencyChangeEvent) => {
+			const value = extractValue(e);
+			if (value) {
+				dispatch(setSelectedCurrency(value));
+			}
+		},
+		[dispatch]
+	);
+
+	const handleDateChange = useCallback(
+		(date: Dayjs | null) => {
+			if (date) dispatch(setSelectedDate(date.format(DEFAULT_DATE_FORMAT)));
+		},
+		[dispatch]
+	);
+
+	const handleConfirmDelete = useCallback(() => {
 		if (currencyToDelete) {
 			dispatch(removeRow(currencyToDelete));
-			triggerToast(`Removed ${currencyToDelete.toUpperCase()}`, 'info');
+			triggerToast(
+				`Removed currency: ${currencyToDelete.toUpperCase()}`,
+				'info'
+			);
 		}
 		setConfirmOpen(false);
 		setCurrencyToDelete(null);
 		setOpen(true);
-	}
+	}, [currencyToDelete, dispatch, triggerToast, setOpen]);
 
-	function handleCancelDelete() {
+	const handleCancelDelete = useCallback(() => {
 		setConfirmOpen(false);
 		setCurrencyToDelete(null);
-	}
+	}, []);
 
-	function handleAddRow(e: CurrencyChangeEvent) {
-		const value = extractValue(e);
-		if (value) {
-			const currencyRow: CurrencyRateRow = {
-				id: (displayedCurrencyRates.length + 1).toString(),
-				currency: formatCurrency(value, currencies || {})
-			};
-			dispatch(addRow(currencyRow.currency.split(' - ')[0].toLowerCase()));
-			setAddCurrency(currencyRow.currency);
-			triggerToast(`Added ${currencyRow.currency}`, 'success');
-			setOpen(true);
-		}
-	}
+	const handleAddRow = useCallback(
+		(e: CurrencyChangeEvent) => {
+			const value = extractValue(e);
+			if (value) {
+				const currencyRow: CurrencyRateRow = {
+					id: (displayedCurrencyRates.length + 1).toString(),
+					currency: formatCurrency(value, currencies || {})
+				};
+				dispatch(addRow(currencyRow.currency.split(' - ')[0].toLowerCase()));
+				setAddCurrency(currencyRow.currency);
+				triggerToast(`Added currency: ${currencyRow.currency}`, 'success');
+				setOpen(true);
+			}
+		},
+		[dispatch, currencies, displayedCurrencyRates.length, triggerToast, setOpen]
+	);
 
 	return {
 		addCurrency,
