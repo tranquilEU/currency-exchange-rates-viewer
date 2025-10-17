@@ -14,6 +14,7 @@ import type {
 export const getCurrencyColumns = (
 	filteredCurrencyRates: CurrencyRateResponse[] | undefined,
 	displayedCurrencyRates: string[],
+	selectedDate: string | null,
 	handleRemoveRow: (currency: string) => void
 ): GridColDef<CurrencyRateRow>[] => [
 	{
@@ -24,11 +25,25 @@ export const getCurrencyColumns = (
 
 		renderCell: params => <div className="id-column-cell">{params.value}</div>
 	},
-	{ field: 'currency', headerName: 'Currency', flex: 2 },
+	{
+		field: 'currency',
+		headerName: 'Currency',
+		flex: 2,
+		renderCell: params => (
+			<div className="text--bold text--primary">{params.value}</div>
+		)
+	},
 	...(filteredCurrencyRates ?? []).reverse().map(day => ({
 		field: day.date,
 		headerName: day.date,
-		flex: 1
+		flex: 1,
+		renderHeader: () => (
+			<div
+				className={day.date === selectedDate ? 'text--bold text--primary' : ''}
+			>
+				{day.date}
+			</div>
+		)
 	})),
 	{
 		field: 'delete',

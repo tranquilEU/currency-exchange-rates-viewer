@@ -3,6 +3,9 @@
 A simple React application that lets users explore historical currency exchange
 rates.
 
+Wanna see it live? Check this
+(link)[https://currency-exchange-rates-viewer-3s4b.vercel.app/]
+
 ## Prerequisites
 
 You need to have PNPM package manager installed. You can check the install
@@ -46,3 +49,6 @@ bar:
 - Lint => will check the code for Eslint errors
 - Type-check => will check the code for type errors
 - Build => will build the project
+- Run Tests => will run all the tests
+- Test Watch => will run all the tests in watch mode
+- Test Coverage => will run test coverage

@@ -1,4 +1,5 @@
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -83,9 +84,15 @@ export const useCurrencyExchanger = () => {
 			getCurrencyColumns(
 				filteredCurrencyRates,
 				displayedCurrencyRates,
+				dayjs(selectedDate).format(DEFAULT_DATE_FORMAT),
 				handleRemoveRow
 			),
-		[filteredCurrencyRates, displayedCurrencyRates, handleRemoveRow]
+		[
+			filteredCurrencyRates,
+			displayedCurrencyRates,
+			handleRemoveRow,
+			selectedDate
+		]
 	);
 
 	const handleCurrencyChange = useCallback(

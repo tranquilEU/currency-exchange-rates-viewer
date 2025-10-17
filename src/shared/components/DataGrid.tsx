@@ -18,6 +18,7 @@ export const DataGridComponent = memo(
 					rows={rows}
 					loading={isLoading}
 					columns={columns}
+					hideFooter
 				/>
 			</Box>
 		);

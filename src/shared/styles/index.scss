@@ -38,6 +38,7 @@ $breakpoints: (
   &--bold { font-weight: bold !important; }
   &--center { text-align: center; }
   &--danger { color: color(danger); }
+  &--primary { color: color(primary); }
 }
 
 body {

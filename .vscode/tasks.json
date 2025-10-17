@@ -1,81 +1,133 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Install Dependencies",
-      "type": "shell",
-      "command": "pnpm install",
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "statusbar": {
-          "label": "$(package) Install Deps",
-          "running": {
-            "color": "#4CAF50",
-            "label": "$(sync) Installing Deps"
-          },
-          "detail": "Install Project Dependencies"
-        }
-      }
-    },
-    {
-      "label": "Start App",
-      "type": "shell",
-      "command": "pnpm run dev",
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "statusbar": {
-          "label": "$(run) Start App",
-          "running": {
-            "color": "#22C1D6",
-            "label": "$(triangle-right) App is Running"
-          },
-          "detail": "Start App"
-        }
-      },
-      "isBackground": true,
-      "problemMatcher": []
-    },
-    {
-      "label": "Lint",
-      "type": "shell",
-      "command": "pnpm run lint",
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "statusbar": {
-          "label": "$(debug) Lint",
-          "detail": "Lint"
-        }
-      },
-      "isBackground": true,
-      "problemMatcher": []
-    },
-    {
-      "label": "Type-check",
-      "type": "shell",
-      "command": "pnpm run type-check",
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "statusbar": {
-          "label": "$(callstack-view-session) Type-check",
-          "detail": "Type-check"
-        }
-      },
-      "isBackground": true,
-      "problemMatcher": []
-    },
-    {
-      "label": "Build",
-      "type": "shell",
-      "command": "pnpm run build",
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "statusbar": {
-          "label": "$(gift) Build",
-          "detail": "Build"
-        }
-      },
-      "isBackground": true,
-      "problemMatcher": []
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install Dependencies",
+			"type": "shell",
+			"command": "pnpm install",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(package) Install Deps",
+					"running": {
+						"color": "#4CAF50",
+						"label": "$(sync) Installing Deps"
+					},
+					"detail": "Install Project Dependencies"
+				}
+			}
+		},
+		{
+			"label": "Start App",
+			"type": "shell",
+			"command": "pnpm run dev",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(run) Start App",
+					"running": {
+						"color": "#22C1D6",
+						"label": "$(triangle-right) App is Running"
+					},
+					"detail": "Start App"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint",
+			"type": "shell",
+			"command": "pnpm run lint",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(debug) Lint",
+					"detail": "Lint"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Type-check",
+			"type": "shell",
+			"command": "pnpm run type-check",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(callstack-view-session) Type-check",
+					"detail": "Type-check"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "pnpm run build",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(gift) Build",
+					"detail": "Build"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests",
+			"type": "shell",
+			"command": "npm test -- --watchAll=false",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(beaker) Run Tests",
+					"running": {
+						"color": "#FF6FD8",
+						"label": "$(beaker) Running Tests"
+					},
+					"detail": "Run Tests"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests in Watch Mode",
+			"type": "shell",
+			"command": "npm test -- --watchAll",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(beaker) Test Watch",
+					"running": {
+						"color": "#FF6FD8",
+						"label": "$(beaker) Tests Running"
+					},
+					"detail": "Run Tests in Watch Mode"
+				}
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Test Coverage",
+			"type": "shell",
+			"command": "npm test -- --coverage",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"statusbar": {
+					"label": "$(shield) Test Coverage",
+					"running": {
+						"color": "#FFD93D",
+						"label": "$(shield) Coverage Running"
+					},
+					"detail": "Run Test Coverage"
+				}
+			}
+		}
+	]
 }
